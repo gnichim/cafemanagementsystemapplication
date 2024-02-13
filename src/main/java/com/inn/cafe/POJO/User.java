@@ -12,6 +12,8 @@ import java.io.Serializable;
 // Select all user whose role is 'user' not 'admin'
 @NamedQuery(name = "User.getAllUser", query = "select new com.inn.cafe.wrapper.UserWrapper(u.id, u.name, u.email, u.contactNumber, u.status) from User u where u.role='user'")
 
+@NamedQuery(name = "User.updateStatus", query = "update User u set u.status=:status where u.id=:id")
+
 @Data // provides constructor, getter and setter
 @Entity
 @DynamicUpdate
