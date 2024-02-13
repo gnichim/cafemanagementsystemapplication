@@ -1,4 +1,4 @@
-package com.inn.cafe.utils.wrapper;
+package com.inn.cafe.wrapper;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 @Data // Getter and Setter for private attributes
 @NoArgsConstructor
 public class UserWrapper {
+
+    // Create Object of th UserWrapper class
+    // UserWrapper user = new UserWrapper(1, "abc", "abc@gmail.com", "5646", "false");
 
     private Integer id;
 
@@ -16,6 +19,7 @@ public class UserWrapper {
 
     private String status;
 
+    // Constructor
     public UserWrapper(Integer id, String name, String email, String contactNumber, String status) {
         this.id = id;
         this.name = name;
@@ -23,4 +27,6 @@ public class UserWrapper {
         this.contactNumber = contactNumber;
         this.status = status;
     }
+
+
 }

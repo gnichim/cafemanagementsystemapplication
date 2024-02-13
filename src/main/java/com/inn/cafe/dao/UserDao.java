@@ -1,7 +1,7 @@
 package com.inn.cafe.dao;
 
 import com.inn.cafe.POJO.User;
-import com.inn.cafe.utils.wrapper.UserWrapper;
+import com.inn.cafe.wrapper.UserWrapper;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 

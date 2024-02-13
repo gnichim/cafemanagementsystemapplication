@@ -10,7 +10,7 @@ import java.io.Serializable;
 @NamedQuery(name = "User.findEmailById", query = "select u from User u where u.email=:email")
 
 // Select all user whose role is 'user' not 'admin'
-@NamedQuery(name = "User.getAllUser", query = "select new com.inn.cafe.wrapper.UserWrapper() from User u where u.role='user'")
+@NamedQuery(name = "User.getAllUser", query = "select new com.inn.cafe.wrapper.UserWrapper(u.id, u.name, u.email, u.contactNumber, u.status) from User u where u.role='user'")
 
 @Data // provides constructor, getter and setter
 @Entity

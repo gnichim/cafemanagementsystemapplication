@@ -4,7 +4,7 @@ import com.inn.cafe.constants.CafeConstants;
 import com.inn.cafe.rest.UserRest;
 import com.inn.cafe.service.UserService;
 import com.inn.cafe.utils.CafeUtils;
-import com.inn.cafe.utils.wrapper.UserWrapper;
+import com.inn.cafe.wrapper.UserWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

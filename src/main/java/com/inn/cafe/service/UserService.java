@@ -1,6 +1,6 @@
 package com.inn.cafe.service;
 
-import com.inn.cafe.utils.wrapper.UserWrapper;
+import com.inn.cafe.wrapper.UserWrapper;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
