@@ -8,6 +8,7 @@ import com.inn.cafe.constants.CafeConstants;
 import com.inn.cafe.dao.UserDao;
 import com.inn.cafe.service.UserService;
 import com.inn.cafe.utils.CafeUtils;
+import com.inn.cafe.utils.EmailUtils;
 import com.inn.cafe.wrapper.UserWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     JwtFilter jwtFilter;
+
+    @Autowired
+    EmailUtils emailUtils;
 
     @Override
     public ResponseEntity<String> signUp(Map<String, String> requestMap) {
@@ -128,6 +132,10 @@ public class UserServiceImpl implements UserService {
                 Optional<User> optional = userDao.findById(Integer.parseInt(requestMap.get("id")));
                 if(!optional.isEmpty()) {
                     userDao.updateStatus(requestMap.get("status"), Integer.parseInt(requestMap.get("id")));
+                    // Before returning the message, we want to send the email
+                    // Send email to inform admins that the user has been enabled (turning (updating) his status from ‘false’ to ‘true’)
+                    // sendMailToAllAdmins(requestMap.get("status"), optional.get().getEmail(), userDao.getAllAdmins());
+                    // Return the message
                     return CafeUtils.getResponseEntity("User Status Updated Successfully", HttpStatus.OK);
                 }else {
                     return CafeUtils.getResponseEntity("User id does not exist", HttpStatus.OK);
@@ -139,6 +147,17 @@ public class UserServiceImpl implements UserService {
             ex.printStackTrace();
         }
         return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private void sendMailToAllAdmins(String status, String user, List<String> allAdmins) {
+        // remove the current user, because we don't want to send the mail to the same user
+        allAdmins.remove(jwtFilter.getCurrentUser());
+        if (status != null && status.equalsIgnoreCase("true")){
+            emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(), "Account Approved", "USER:- " + user + " \n is approved by \nADMIN:-" + jwtFilter.getCurrentUser(), allAdmins);
+        } else {
+            emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(), "Account Disabled", "USER:- " + user + " \n is disabled by \nADMIN:-" + jwtFilter.getCurrentUser(), allAdmins);
+        }
+
     }
 
 }
