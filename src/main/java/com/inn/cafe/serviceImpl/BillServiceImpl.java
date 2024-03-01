@@ -11,6 +11,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,7 +67,23 @@ public class BillServiceImpl implements BillService {
                 addTableHeader(table);
 
                 // Add the data into the table
+                JSONArray jsonArray = CafeUtils.getJasonArrayFromString((String) requestMap.get("productDetails"));
+                // run a loop to add row into our table
+                for (int i=0; i < jsonArray.length(); i++) {
+                    addRows(table, CafeUtils.getMapFromJson(jsonArray.getString(i)));
+                }
+                // add the table into the document
+                document.add(table);
 
+                // add the footer
+                Paragraph footer = new Paragraph("Total: "+requestMap.get("totalAmount")+"\n"
+                +"Thank you for visiting. Please visit again!!",getFont("Data"));
+                // add the footer to the document
+                document.add(footer);
+                // Finally we close the document
+                document.close();
+
+                return new ResponseEntity<>("{\"uuid\":\"" + fileName + "\"}", HttpStatus.OK);
 
             }
             return  CafeUtils.getResponseEntity("Required data not found", HttpStatus.BAD_REQUEST);
@@ -74,6 +91,16 @@ public class BillServiceImpl implements BillService {
             ex.printStackTrace();
         }
         return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // Method to add row into the tables
+    private void addRows(PdfPTable table, Map<String, Object> data) {
+        log.info("Inside addRows");
+        table.addCell((String) data.get("name"));
+        table.addCell((String) data.get("category"));
+        table.addCell((String) data.get("quantity"));
+        table.addCell(Double.toString((Double) data.get("price")));
+        table.addCell(Double.toString((Double) data.get("total")));
     }
 
     private void addTableHeader(PdfPTable table) {
@@ -114,7 +141,7 @@ public class BillServiceImpl implements BillService {
         rect.enableBorderSide(2);
         rect.enableBorderSide(4);
         rect.enableBorderSide(8);
-        rect.setBackgroundColor(BaseColor.BLACK);
+        rect.setBorderColor(BaseColor.BLACK);
         rect.setBorderWidth(1);
         document.add(rect);
     }
