@@ -27,6 +27,10 @@ public class JwtUtil {
     }
 
     public <T> T extractClaims(String token, Function<Claims, T> claimsResolver) {
+        if (token == null || token.isEmpty()) {
+            throw new IllegalArgumentException("JWT token cannot be null or empty");
+        }
+
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
